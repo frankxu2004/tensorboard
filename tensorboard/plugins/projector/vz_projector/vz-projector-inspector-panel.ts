@@ -248,8 +248,7 @@ export class InspectorPanel extends PolymerClass {
 
   private setupUI(projector: Projector) {
     this.distFunc = vector.cosDist;
-    const eucDist =
-        this.querySelector('.distance a.euclidean') as HTMLLinkElement;
+    const eucDist = this.querySelector('.distance a.euclidean') as HTMLLinkElement;
     eucDist.onclick = () => {
       const links = this.querySelectorAll('.distance a');
       for (let i = 0; i < links.length; i++) {
@@ -277,6 +276,21 @@ export class InspectorPanel extends PolymerClass {
       const neighbors = projector.dataSet.findNeighbors(
           this.selectedPointIndices[0], this.distFunc, this.numNN);
       this.updateNeighborsList(neighbors);
+    };
+
+    const dotDist = this.querySelector('.distance a.dot') as HTMLLinkElement;
+    dotDist.onclick = () => {
+        const links = this.querySelectorAll('.distance a');
+        for (let i = 0; i < links.length; i++) {
+            util.classed(links[i] as HTMLElement, 'selected', false);
+        }
+        util.classed(dotDist, 'selected', true);
+
+        this.distFunc = vector.dotDist;
+        this.projectorEventContext.notifyDistanceMetricChanged(this.distFunc);
+        const neighbors = projector.dataSet.findNeighbors(
+            this.selectedPointIndices[0], this.distFunc, this.numNN);
+        this.updateNeighborsList(neighbors);
     };
 
     // Called whenever the search text input changes.
